@@ -98,3 +98,88 @@ Presenter - презентер содержит основную логику п
 `emit<T extends object>(event: string, data?: T): void` - инициализация события. При вызове события в метод передается название события и объект с данными, который будет использован как аргумент для вызова обработчика.  
 `trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие с передачей в него данных из второго параметра.
 
+### Данные 
+Товар:
+`interface IProduct {
+  id: string;
+  description: string;
+  image: string;
+  title: string;
+  category: string;
+  price: number | null;
+}` - интерфейс выступает шаблоном для описания структуры карточки товара 
+
+
+Покупатель:
+`interface IBuyer {
+  payment: TPayment;
+  email: string;
+  phone: string;
+  address: string;
+}` - интерфейс выступает шаблоном для описания структуры покупателя
+
+Корзина товаров:
+`interface CartItem {
+  product: IProduct;
+  quantity: number;
+}`
+
+
+### Модели данных
+
+Каталог товаров:
+
+  Класс: Catalog
+
+  Данные:
+    хранит массив всех товаров `_products:IProduct[] | undefined`
+    хранит товар, выбранный для подробного отображения `_selectProduct:IProduct | undefined`
+  
+  Методы:    
+    сохранение массива товаров полученного в параметрах метода`set products(val: IProduct[])`
+    получение массива товаров из модели `get products():IProduct[]`
+    получение одного товара по его id `findProductById(id: string): IProduct | undefined`
+    сохранение товара для подробного отображения `set selectProduct(val:IProduct)`
+    получение товара для подробного отображения `get selectProduct():IProduct | undefined`
+
+Корзина:
+
+  Класс: `Basket`
+
+  Данные:
+    хранит массив товаров, выбранных покупателем для покупки `_selectedProducts:CartItem[]`
+  
+  Методы:
+    получение массива товаров, которые находятся в корзине: `get selectedProducts():IProduct[]`
+    добавление товара, который был получен в параметре, в массив корзины `add(val:IProduct)`
+    удаление товара, полученного в параметре из массива корзины `remove(val:IProduct)`
+    очистка корзины `clear()`
+    получение стоимости всех товаров в корзине `totalCost():number`
+    получение количества товаров в корзине `totalCount():number`
+    проверка наличия товара в корзине по его id, полученного в параметр метода `inBasket(id:string):boolean`
+
+Покупатель:
+
+  Класс: `Buyer`
+
+  Данные:
+    информация о пользователе `_buyerInfo:IBuyer | undefined`
+
+  Методы:
+    сохранение данных в модели `set info(val:IBuyer)`
+    получение всех данных покупателя `get info():IBuyer | undefined`
+    очистка данных покупателя `clear()`
+    валидация данных `validate()`
+
+### Слой коммуникации
+
+Класс: `WebLarekApi`
+
+Назначение: 
+  Прослойка между бизнес-логикой приложения и внешним API. Отвечает за получение и отдачу данных из внутренних моделей в формат API и обратно.
+
+Методы:
+  Получение каталога `getProducts`  
+  Оформление заказаз `postOrder`.
+
+
