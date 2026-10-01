@@ -100,8 +100,6 @@ console.log('Catalog.selectedProduct сброшен:', catalog.selectedProduct);
 webLarekApi
   .getProducts()
   .then((apiProducts) => {
-    // ровно тот же паттерн, что в примере:
-    // productsModel.setItems(apiProducts.items)
     catalog.products = apiProducts.items;
 
     console.log('apiProducts:', apiProducts);
