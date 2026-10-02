@@ -1,14 +1,20 @@
 import { IProduct } from "../../types";
 
+const EMPTY_PRODUCT: IProduct = {
+  id: '',
+  description: '',
+  image: '',
+  title: '',
+  category: '',
+  price: null,
+};
+
 export class Catalog {
-  
+
   private _products: IProduct[] = [];
-  private _selectedProduct: IProduct | undefined;
+  private _selectedProduct: IProduct = { ...EMPTY_PRODUCT };
 
   set products(val: IProduct[]) {
-    if (!Array.isArray(val)) {
-      throw new Error('В каталог нужно передавать массив товаров');
-    }
     this._products = val;
   }
 
@@ -20,11 +26,15 @@ export class Catalog {
     return this._products.find(product => product.id === id);
   }
 
-  set selectedProduct(val: IProduct | undefined) {
+  set selectedProduct(val: IProduct) {
     this._selectedProduct = val;
   }
 
   get selectedProduct(): IProduct | undefined {
     return this._selectedProduct;
+  }
+
+  clearSelectedProduct(): void {
+    this._selectedProduct = { ...EMPTY_PRODUCT };
   }
 }

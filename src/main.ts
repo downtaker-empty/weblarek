@@ -1,96 +1,80 @@
 import './scss/styles.scss';
+
 import { Api } from './components/base/Api';
-import { WebLarekApi } from './api/WebLarekApi';
+import { WebLarekApi } from './components/api/WebLarekApi';
 import { Catalog } from './components/Models/Catalog';
 import { Basket } from './components/Models/Basket';
 import { Buyer } from './components/Models/Buyer';
-import { IBuyer, IProduct } from './types';
+
+import { API_URL } from './utils/constants';
+import { apiProducts } from './utils/data';
 
 // ------------------------------------------------------------------
-// 1. Создание экземпляров всех классов
+// 1. Создание экземпляров
 // ------------------------------------------------------------------
 
-const api = new Api('https://larek-api.nomoreparties.co/api/weblarek');
-
+const api = new Api(API_URL);
+console.log(API_URL);
 const webLarekApi = new WebLarekApi(api);
 const catalog = new Catalog();
 const basket = new Basket();
 const buyer = new Buyer();
 
 // ------------------------------------------------------------------
-// 2. Тестирование моделей на локальных данных
+// 2. Проверки моделей на данных 
 // ------------------------------------------------------------------
 
-const testProduct1: IProduct = {
-  id: 'prod-1',
-  title: 'Тестовый товар 1',
-  description: 'Описание первого товара',
-  image: '/images/1.jpg',
-  category: 'софт-скил',
-  price: 1000,
-};
-
-const testProduct2: IProduct = {
-  id: 'prod-2',
-  title: 'Тестовый товар 2',
-  description: 'Описание второго товара',
-  image: '/images/2.jpg',
-  category: 'хард-скил',
-  price: 2500,
-};
-
 // --- Catalog ---
-catalog.products = [testProduct1, testProduct2];
-console.log('Catalog.products:', catalog.products);
+catalog.products = apiProducts.items;
+console.log('Catalog: массив товаров', catalog.products);
 
-catalog.selectedProduct = testProduct1;
-console.log('Catalog.selectedProduct:', catalog.selectedProduct);
+const firstProduct = apiProducts.items[0];
+const secondProduct = apiProducts.items[1];
 
-console.log('Catalog.findProductById("prod-1"):', catalog.findProductById('prod-1'));
+catalog.selectedProduct = firstProduct;
+console.log('Catalog: выбранный товар', catalog.selectedProduct);
+
+console.log(
+  `Catalog: поиск по id "${firstProduct.id}"`,
+  catalog.findProductById(firstProduct.id)
+);
 
 // --- Basket ---
-basket.add(testProduct1);
-basket.add(testProduct1);
-basket.add(testProduct2);
+basket.add(firstProduct);
+basket.add(firstProduct);
+basket.add(secondProduct);
 
-console.log('Basket.selectedProducts:', basket.selectedProducts);
-console.log('Basket.totalCount:', basket.totalCount);
-console.log('Basket.totalCost:', basket.totalCost);
-console.log('Basket.inBasket("prod-1"):', basket.inBasket('prod-1'));
+console.log('Basket: товары в корзине', basket.selectedProducts);
+console.log('Basket: общее количество', basket.totalCount);
+console.log('Basket: общая стоимость', basket.totalCost);
+console.log(`Basket: товар "${firstProduct.id}" в корзине?`, basket.inBasket(firstProduct.id));
 
-basket.remove('prod-2');
-console.log('Basket после remove("prod-2"):', basket.selectedProducts);
+basket.remove(secondProduct.id);
+console.log('Basket: после удаления второго товара', basket.selectedProducts);
 
 // --- Buyer ---
-const testBuyer: IBuyer = {
-  payment: {
-    id: 'pay-1',
-    orderId: 'order-1',
-    amount: 3500,
-    status: 'paid',
-    method: 'card',
-    paidAt: new Date(),
-  },
+buyer.info = {
   email: 'buyer@example.com',
   phone: '+7 000 000-00-00',
   address: 'Москва, ул. Пушкина, д. 1',
+  payment: 'card',
 };
+console.log('Buyer: данные покупателя', buyer.info);
 
-buyer.info = testBuyer;
-console.log('Buyer.info:', buyer.info);
+console.log('Buyer: валидация корректных данных', buyer.validate());
 
-console.log('Buyer.validate(correct):', Buyer.validate(testBuyer));
-console.log('Buyer.validate(bad email):', Buyer.validate({ ...testBuyer, email: 'no-at-sign' }));
+buyer.info = { email: '' };
+console.log('Buyer: валидация с пустым email', buyer.validate());
 
-// --- очистка ---
+// --- Очистка ---
 basket.clear();
-console.log('Basket после clear:', basket.selectedProducts);
+console.log('Basket: после clear', basket.selectedProducts);
 
 buyer.clear();
-console.log('Buyer.info после clear:', buyer.info);
+console.log('Buyer: после clear', buyer.info);
 
-catalog.selectedProduct = undefined;
-console.log('Catalog.selectedProduct сброшен:', catalog.selectedProduct);
+catalog.clearSelectedProduct();
+console.log('Catalog: выбранный товар сброшен', catalog.selectedProduct);
 
 // ------------------------------------------------------------------
 // 3. Запрос к серверу за каталогом
@@ -103,7 +87,7 @@ webLarekApi
     catalog.products = apiProducts.items;
 
     console.log('apiProducts:', apiProducts);
-    console.log('Catalog.products (с сервера):', catalog.products);
+    console.log('Массив товаров из каталога:', catalog.products);
   })
   .catch((error) => {
     console.error('Ошибка при загрузке каталога:', error);

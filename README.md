@@ -100,30 +100,23 @@ Presenter - презентер содержит основную логику п
 
 ### Данные 
 Товар:
-`interface IProduct {
-  id: string;
-  description: string;
-  image: string;
-  title: string;
-  category: string;
-  price: number | null;
-}` - интерфейс выступает шаблоном для описания структуры карточки товара 
+`interface IProduct` {
+  `id: string;` Уникальный идентификатор продукта
+  `description: string;` Краткое описание товара
+  `image: string;` Ссылка на изображение товара
+  `title: string;` Название товара
+  `category: string;` Категория, к которой относится товар
+  `price: number;` Цена товара
+} - интерфейс выступает шаблоном для описания структуры карточки товара 
 
 
 Покупатель:
-`interface IBuyer {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
-}` - интерфейс выступает шаблоном для описания структуры покупателя
-
-Корзина товаров:
-`interface CartItem {
-  product: IProduct;
-  quantity: number;
-}`
-
+`interface IBuyer` {
+  `payment: TPayment;`  Способ оплаты, выбранный покупателем
+  `email: string;` Электронная почта покупателя
+  `phone: string;` Контактный телефон покупателя
+  `address: string;` Адрес доставки заказа
+} - интерфейс выступает шаблоном для описания структуры покупателя
 
 ### Модели данных
 
@@ -141,6 +134,7 @@ Presenter - презентер содержит основную логику п
     получение одного товара по его id `findProductById(id: string): IProduct | undefined`
     сохранение товара для подробного отображения `set selectProduct(val:IProduct)`
     получение товара для подробного отображения `get selectProduct():IProduct | undefined`
+    сбор товара для подробного отображения `clearSelectedProduct()`
 
 Корзина:
 

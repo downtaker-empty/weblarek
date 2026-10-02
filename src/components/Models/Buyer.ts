@@ -1,41 +1,47 @@
-import { IBuyer } from "../../types";
+import { IBuyer, BuyerErrors } from "../../types";
 
 export class Buyer {
-  private _buyerInfo: IBuyer | undefined;
+  private _buyerInfo: IBuyer = {
+    address: '',
+    email: '',
+    phone: '',
+    payment: '',
+  };
 
-  set info(val: IBuyer) {
-    const errors = Buyer.validate(val);
-    
-    if (Object.keys(errors).length > 0) {
-      throw new Error('Неверные данные пользователя');
-    }
-    
-    this._buyerInfo = val;
-  }
-
-  get info(): IBuyer | undefined {
+  get info(): IBuyer {
     return this._buyerInfo;
   }
 
-  clear(): void {
-    this._buyerInfo = undefined;
+  set info(val: Partial<IBuyer>) {
+  this._buyerInfo = { ...this._buyerInfo, ...val };
   }
 
-  static validate(data: IBuyer): Record<string, string> {
-    const errors: Record<string, string> = {};
+  clear(): void {
+    this._buyerInfo = {
+      address: '',
+      email: '',
+      phone: '',
+      payment: '',
+    };
+  }
 
-    if (!data.email || String(data.email).trim() === "") {
+  validate(): BuyerErrors {
+    const errors: BuyerErrors = {};
+
+    if (!this._buyerInfo.email || this._buyerInfo.email.trim() === '') {
       errors.email = 'Email обязателен';
-    } else if (!data.email.includes('@')) {
-      errors.email = 'Некорректный email';
     }
 
-    if (!data.address || String(data.address).trim() === "") {
+    if (!this._buyerInfo.address || this._buyerInfo.address.trim() === '') {
       errors.address = 'Адрес обязателен';
     }
 
-    if (!data.phone || String(data.phone).trim() === "") {
+    if (!this._buyerInfo.phone || this._buyerInfo.phone.trim() === '') {
       errors.phone = 'Не указали телефон';
+    }
+
+    if (!this._buyerInfo.payment || this._buyerInfo.payment.trim() === '') {
+      errors.payment = 'Способ оплаты обязателен';
     }
 
     return errors;

@@ -1,24 +1,25 @@
-import { CartItem, IProduct } from "../../types";
+import { IProduct } from "../../types";
 
 export class Basket {
-  private _selectedProducts: CartItem[] = [];
+// Так сложилось во всех моделях: private закрывает поле снаружи,
+// а _ помогает глазу отличать поле от одноимённого get/set.
+// Мне так читается проще — поэтому решил оставил единообразно.
 
-  get selectedProducts(): CartItem[] {
+  private _selectedProducts: IProduct[] = [];
+
+  get selectedProducts(): IProduct[] {
     return this._selectedProducts;
   }
 
   add(product: IProduct): void {
-    const item = this._selectedProducts.find(i => i.product.id === product.id);
-
-    if (item) {
-      item.quantity += 1;
-    } else {
-      this._selectedProducts.push({ product, quantity: 1 });
+    const exists = this._selectedProducts.some(p => p.id === product.id);
+    if (!exists) {
+      this._selectedProducts.push(product);
     }
   }
 
   remove(id: string): void {
-    this._selectedProducts = this._selectedProducts.filter(i => i.product.id !== id);
+    this._selectedProducts = this._selectedProducts.filter(p => p.id !== id);
   }
 
   clear(): void {
@@ -26,17 +27,14 @@ export class Basket {
   }
 
   get totalCost(): number {
-    return this._selectedProducts.reduce(
-      (sum, item) => sum + ((item.product.price ?? 0) * item.quantity), 
-      0
-    );
+    return this._selectedProducts.reduce((sum, product) => sum + (product.price ?? 0), 0);
   }
 
   get totalCount(): number {
-    return this._selectedProducts.reduce((sum, item) => sum + item.quantity, 0);
+    return this._selectedProducts.length;
   }
 
   inBasket(id: string): boolean {
-    return this._selectedProducts.some(i => i.product.id === id);
+    return this._selectedProducts.some(p => p.id === id);
   }
 }
