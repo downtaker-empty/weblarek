@@ -72,10 +72,7 @@ console.log('Basket: после clear', basket.selectedProducts);
 
 buyer.clear();
 console.log('Buyer: после clear', buyer.info);
-
-catalog.clearSelectedProduct();
-console.log('Catalog: выбранный товар сброшен', catalog.selectedProduct);
-
+  
 // ------------------------------------------------------------------
 // 3. Запрос к серверу за каталогом
 // 4. Сохранение массива в модель и вывод в консоль

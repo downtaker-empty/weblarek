@@ -1,18 +1,9 @@
 import { IProduct } from "../../types";
 
-const EMPTY_PRODUCT: IProduct = {
-  id: '',
-  description: '',
-  image: '',
-  title: '',
-  category: '',
-  price: null,
-};
-
 export class Catalog {
 
   private _products: IProduct[] = [];
-  private _selectedProduct: IProduct = { ...EMPTY_PRODUCT };
+  private _selectedProduct: IProduct | undefined = undefined;
 
   set products(val: IProduct[]) {
     this._products = val;
@@ -34,7 +25,4 @@ export class Catalog {
     return this._selectedProduct;
   }
 
-  clearSelectedProduct(): void {
-    this._selectedProduct = { ...EMPTY_PRODUCT };
-  }
 }

@@ -5,7 +5,7 @@ export class Buyer {
     address: '',
     email: '',
     phone: '',
-    payment: '',
+    payment: null,
   };
 
   get info(): IBuyer {
@@ -21,7 +21,7 @@ export class Buyer {
       address: '',
       email: '',
       phone: '',
-      payment: '',
+      payment: null,
     };
   }
 
@@ -40,7 +40,7 @@ export class Buyer {
       errors.phone = 'Не указали телефон';
     }
 
-    if (!this._buyerInfo.payment || this._buyerInfo.payment.trim() === '') {
+    if (!this._buyerInfo.payment) {
       errors.payment = 'Способ оплаты обязателен';
     }
 

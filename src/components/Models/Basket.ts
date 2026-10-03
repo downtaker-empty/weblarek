@@ -12,8 +12,7 @@ export class Basket {
   }
 
   add(product: IProduct): void {
-    const exists = this._selectedProducts.some(p => p.id === product.id);
-    if (!exists) {
+    if (!this.inBasket(product.id)) {
       this._selectedProducts.push(product);
     }
   }
