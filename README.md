@@ -134,7 +134,6 @@ Presenter - презентер содержит основную логику п
     получение одного товара по его id `findProductById(id: string): IProduct | undefined`
     сохранение товара для подробного отображения `set selectProduct(val:IProduct)`
     получение товара для подробного отображения `get selectProduct():IProduct | undefined`
-    сбор товара для подробного отображения `clearSelectedProduct()`
 
 Корзина:
 
