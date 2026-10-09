@@ -1,8 +1,7 @@
-import { Api } from '../base/Api';
-import { IProductResponse, IOrder, IOrderResponse } from '../../types';
+import { IProductResponse, IOrder, IOrderResponse, IApi } from '../../types';
 
 export class WebLarekApi {
-  constructor(private api: Api) {}
+  constructor(private api: IApi) {}
 
   getProducts(): Promise<IProductResponse> {
     return this.api.get<IProductResponse>('/product/');

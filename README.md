@@ -314,47 +314,57 @@ Presenter - презентер содержит основную логику п
 События:
   При клике по кнопке удаления вызывается обработчик `actions.onDelete`
 
-Класс `OrderForm`
-Первая форма оформления заказа: выбор способа оплаты и ввод адреса доставки.
+Класс `Form`
+Абстрактный базовый класс для форм оформления заказа. Содержит общий каркас, используемый OrderForm и ContactsForm: кнопку отправки, блок ошибок и подписку на событие submit.
 
 Конструктор:
-  принимает корневой DOM-элемент и брокер событий: `constructor(container: HTMLElement, events: IEvents)`
+  принимает корневой DOM-элемент, брокер событий и функцию-обработчик отправки: `constructor(container: HTMLElement, events: IEvents, onSubmit: () => void)`
 
 Поля класса:
-кнопка оплаты онлайн: `cardButton: HTMLButtonElement`
-кнопка оплаты при получении: `cashButton: HTMLButtonElement`
-поле ввода адреса: `addressInput: HTMLInputElement`
-кнопка «Далее»: `submitButton: HTMLButtonElement`
-блок сообщений об ошибках: `errorElement: HTMLElement`
+  кнопка отправки формы: `submitButton: HTMLButtonElement`
+  блок сообщений об ошибках: `errorElement: HTMLElement`
+  функция-обработчик отправки: `onSubmit: () => void`
 
 Сеттеры:
-выделяет выбранный способ оплаты: `set payment(value: Payment)`
-устанавливает адрес доставки: `set address(value: string)`
-блокирует/разблокирует кнопку «Далее»: `set valid(value: boolean)`
-выводит сообщение об ошибке: `set errors(value: string)`
+  блокирует/разблокирует кнопку отправки: `set valid(value: boolean)`
+  выводит сообщение об ошибке: `set errors(value: string)`
 
 События:
-При выборе способа оплаты генерируется событие `order:payment`
-При вводе адреса доставки генерируется событие `order:address`
-При отправке формы генерируется событие `order:next`
+  При отправке формы вызывается переданный в конструктор обработчик `onSubmit`
 
-Класс `ContactsForm`
-Вторая форма оформления заказа: ввод email и телефона покупателя.
+Класс `OrderForm`
+Первая форма оформления заказа: выбор способа оплаты и ввод адреса доставки. Наследуется от Form.
 
 Конструктор:
   принимает корневой DOM-элемент и брокер событий: constructor(container: HTMLElement, events: IEvents)
 
 Поля класса:
+  кнопка оплаты онлайн: `cardButton: HTMLButtonElement`
+  кнопка оплаты при получении: `cashButton: HTMLButtonElement`
+  поле ввода адреса: `addressInput: HTMLInputElement`
+
+Сеттеры:
+  выделяет выбранный способ оплаты: `set payment(value: Payment)`
+  устанавливает адрес доставки: `set address(value: string)`
+
+События:
+  При выборе способа оплаты генерируется событие `order:payment`
+  При вводе адреса доставки генерируется событие `order:address`
+  При отправке формы генерируется событие `order:next`
+
+Класс `ContactsForm`
+Вторая форма оформления заказа: ввод email и телефона покупателя. Наследуется от `Form`
+
+Конструктор:
+  принимает корневой DOM-элемент и брокер событий: `constructor(container: HTMLElement, events: IEvents)`
+
+Поля класса:
   поле ввода email: `emailInput: HTMLInputElement`
   поле ввода телефона: `phoneInput: HTMLInputElement`
-  кнопка «Оплатить»: `submitButton: HTMLButtonElement`
-  блок сообщений об ошибках: `errorElement: HTMLElement`
 
 Сеттеры:
   устанавливает email: `set email(value: string)`
   устанавливает телефон: `set phone(value: string)`
-  блокирует/разблокирует кнопку «Оплатить»: `set valid(value: boolean)`
-  выводит сообщение об ошибке: `set errors(value: string)`
 
 События:
   При вводе email генерируется событие `contacts:email`
