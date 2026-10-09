@@ -1,11 +1,10 @@
 import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class Basket {
-// Так сложилось во всех моделях: private закрывает поле снаружи,
-// а _ помогает глазу отличать поле от одноимённого get/set.
-// Мне так читается проще — поэтому решил оставил единообразно.
-
   private _selectedProducts: IProduct[] = [];
+
+  constructor(private events:IEvents){}
 
   get selectedProducts(): IProduct[] {
     return this._selectedProducts;
@@ -14,15 +13,18 @@ export class Basket {
   add(product: IProduct): void {
     if (!this.inBasket(product.id)) {
       this._selectedProducts.push(product);
+      this.events.emit('basket:changed');
     }
   }
 
   remove(id: string): void {
     this._selectedProducts = this._selectedProducts.filter(p => p.id !== id);
+    this.events.emit('basket:changed');
   }
 
   clear(): void {
     this._selectedProducts = [];
+    this.events.emit('basket:changed');
   }
 
   get totalCost(): number {

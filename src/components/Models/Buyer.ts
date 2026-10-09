@@ -1,6 +1,8 @@
 import { IBuyer, BuyerErrors } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class Buyer {
+  
   private _buyerInfo: IBuyer = {
     address: '',
     email: '',
@@ -8,12 +10,15 @@ export class Buyer {
     payment: null,
   };
 
+  constructor (private events:IEvents){}
+
   get info(): IBuyer {
     return this._buyerInfo;
   }
 
   set info(val: Partial<IBuyer>) {
-  this._buyerInfo = { ...this._buyerInfo, ...val };
+    this._buyerInfo = { ...this._buyerInfo, ...val };
+    this.events.emit('buyer:changed');
   }
 
   clear(): void {
@@ -23,6 +28,8 @@ export class Buyer {
       phone: '',
       payment: null,
     };
+    
+    this.events.emit('buyer:changed');
   }
 
   validate(): BuyerErrors {
