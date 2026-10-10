@@ -137,6 +137,7 @@ function renderBasket(): void {
   basketView.items = itemViews;
   basketView.total = basket.totalCost;
   basketView.disabled = items.length === 0;
+  header.counter = basket.totalCount;
 }
 
 function openOrderForm(): void {
@@ -210,9 +211,9 @@ async function submitOrder(): Promise<void> {
   modal.render({ content: success.render() });
 }
 
-function updateHeaderCounter(): void {
+/*function updateHeaderCounter(): void {
   header.counter = basket.totalCount;
-}
+}*/
 
 /////////////////////////////////////////
 // Подписки на события
@@ -228,7 +229,7 @@ events.on('product:select', (data: { id: string }) => {
 events.on('product:selected', openPreview);
 events.on('product:toggle', toggleProductInBasket);
 
-events.on('basket:changed', updateHeaderCounter);
+events.on('basket:changed', renderBasket);
 events.on('basket:remove', (data: { id: string }) => {
   basket.remove(data.id);
   renderBasket();
